@@ -1,8 +1,11 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
+from .models import User, LoginAttempt
 from . import db 
 import bcrypt
 from flask_login import login_user, login_required, logout_user, current_user
+from .auth_validation import *
+import time
+import random
 
 auth = Blueprint('auth', __name__)
 
@@ -14,15 +17,16 @@ def generate_password_hash(password):
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        time.sleep(random.uniform(1, 3))
         email = request.form.get('email')
         password = request.form.get('password')
-        user = User.query.filter_by(email=email).first()
-        if user and bcrypt.checkpw(password.encode('utf-8') ,user.password):
+        validation = validate_login(email, password)
+        if validation.success:
             flash('Logged in successfully!', category='success')
-            login_user(user, remember=True)
+            login_user(validation.message, remember=True)
             return redirect(url_for('views.home'))
         else:
-            flash('Invalid email or password.', category='error')
+            flash(validation.message, category='error')
     return render_template("login.html", user=current_user)
 
 @auth.route('/logout')
@@ -35,27 +39,17 @@ def logout():
 def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
-        first_name = request.form.get('firstName')
+        username = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
-
-        user = User.query.filter_by(email=email).first()
-        if user:
-            flash('Email already exists.', category='error')
-        elif len(email) < 4:
-            flash('Email must be greater than 3 characters.', category='error')
-        elif len(first_name) < 2:
-            flash('First name must be greater than 1 character.', category='error')
-        elif password1 != password2:
-            flash('Passwords don\'t match.', category='error')
-        elif len(password1) < 7:
-            flash('Password must be at least 7 characters.', category='error')
-        else:
-            new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1))
+        validation = validate_sign_up(email, username, password1, password2)
+        if validation.success:
+            new_user = User(email=email, first_name=username, password_hash=generate_password_hash(password1))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
-
+        else:
+            flash(validation.message, category='error')
     return render_template("sign_up.html", user=current_user)
