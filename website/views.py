@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from .models import Note
 from . import db
 import json
+import markdown
 
 views = Blueprint('views', __name__)
 
@@ -20,8 +21,8 @@ def home():
             db.session.add(new_note) #adding the note to the database 
             db.session.commit()
             flash('Note added!', category='success')
-
-    return render_template("home.html", user=current_user)
+    rendered_notes = [markdown.markdown(note) for note in current_user.notes]
+    return render_template("home.html", rendered_notes=rendered_notes)
 
 
 @views.route('/delete-note', methods=['POST'])
