@@ -9,6 +9,7 @@ DB_NAME = "database.db"
 
 def create_app():
     app = Flask(__name__)
+    app.config['APP_NAME'] = 'InvinciNote'
     app.config['APP_SECRET_ENV'] = 'invictinoteAppSecret'
     app.config['PEPPER_ENV'] = 'invincinotePepper' 
     app.config['SECRET_KEY'] = os.environ[app.config['APP_SECRET_ENV']]
@@ -32,7 +33,7 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(id):
-        return User.query.get(int(id))
+        return User.query.filter(User.id == int(id)).first()
     return app
 
 def create_database(app):

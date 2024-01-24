@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <main class="form-signin w-100 m-auto">
+      <form role="form">
+          <ul>
+            <li>Download <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&gl=US" target="_blank">Google Authenticator</a> on your mobile.</li>
+            <li>Set up a new authenticator.</li>
+            <li>Scan QR code with authenticator<a href="{{ url_for('auth.totp') }}"></li>
+          </ul>
+          <div class="text-center">
+            <img src="data:image/png;base64, {{ qr_image }}" alt="Secret Token" style="width:200px;height:200px"/>
+          </div>
+        <p class="mt-4 text-center">
+          Once you have scanned the QR, please click here <a href="{{ url_for('auth.totp') }}"></a>
+        </p>
+      </form>
+    </main>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+{% endblock %}
