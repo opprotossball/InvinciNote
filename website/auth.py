@@ -9,11 +9,6 @@ import random
 
 auth = Blueprint('auth', __name__)
 
-def generate_password_hash(password):
-    bpass = password.encode('utf-8')
-    salt = bcrypt.gensalt()
-    return bcrypt.hashpw(bpass, salt)
-
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

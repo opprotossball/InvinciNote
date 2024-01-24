@@ -4,6 +4,8 @@ from . import db
 from .action_result import ActionResult
 from .models import User, LoginAttempt
 import bcrypt
+from flask import current_app
+import os
 
 def password_check(password):
     short_error = len(password) < 8
@@ -64,10 +66,21 @@ def check_login_block(user_id):
     )
     return len(recent_attempts) >= failed_attempts
 
+def check_password(password, password_hash):
+    pepper = os.environ[current_app.config['PEPPER_ENV']]
+    bytes = (password + pepper).encode('utf-8')
+    return bcrypt.checkpw(bytes, password_hash)
+
 def validate_login(email, password):
     #validate email
     user = User.query.filter_by(email=email).first()
-    if not (user and bcrypt.checkpw(password.encode('utf-8'), user.password_hash)):
+    if not (user and check_password(password, user.password_hash)):
         return ActionResult(False, 'Invalid email or password.')
     else:
         return ActionResult(True, user)
+    
+def generate_password_hash(password):
+    pepper = os.environ[current_app.config['PEPPER_ENV']]
+    bytes = (password + pepper).encode('utf-8')
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(bytes, salt)
