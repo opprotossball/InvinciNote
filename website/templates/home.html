@@ -2,18 +2,39 @@
 %}
 <h1 align="center">Notes</h1>
 <ul class="list-group list-group-flush" id="notes">
-  {% for index, note in enumerate(rendered_notes) %}
+  {% for note in user.notes %}
   <li class="list-group-item">
-    {{ note }}
-    <button type="button" class="close" onClick="deleteNote({{ index }})">
+    <a href="{{ url_for('views.show_note', note_id=note.id) }}">{{ note.title }}</a>
+    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
       <span aria-hidden="true">&times;</span>
     </button>
   </li>
   {% endfor %}
 </ul>
+<h1 align="center">Add Note</h1>
 <form method="POST">
-  <textarea name="note" id="note" class="form-control"></textarea>
+  <div class="form-group">
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="note">Note:</label>
+    <textarea name="note" id="note" class="form-control"></textarea>
+  </div>
+
+  <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="publicCheckbox" name="public">
+    <label class="form-check-label" for="publicCheckbox">Public</label>
+  </div>
+
+  <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="encryptedCheckbox" name="encrypted">
+    <label class="form-check-label" for="encryptedCheckbox">Encrypted</label>
+  </div>
+
   <br />
+
   <div align="center">
     <button type="submit" class="btn btn-primary">Add Note</button>
   </div>
