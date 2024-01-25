@@ -14,6 +14,7 @@ def create_app():
     app.config['PEPPER_ENV'] = 'invincinotePepper' 
     app.config['SECRET_KEY'] = os.environ[app.config['APP_SECRET_ENV']]
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['ALLOWED_TAGS'] = ['p', 'br', 'em', 'strong', 'a', 'h1', 'h2', 'h3']
     db.init_app(app)
 
     from .views import views

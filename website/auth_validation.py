@@ -6,6 +6,7 @@ from .models import User, LoginAttempt
 import bcrypt
 from flask import current_app
 import os
+import math
 
 def password_check(password):
     short_error = len(password) < 8
@@ -26,8 +27,11 @@ def password_check(password):
     }
 
 def validate_sign_up(email, username, password1, password2):
+    if not validate_email(email):
+        return ActionResult(False, 'Enter valid email.')
+    if not validate_username(username):
+        return ActionResult(False, 'Username can contain only alphanumeric characters and underscores.')
     user = User.query.filter_by(email=email).first()
-    # validate email
     if user:
         return ActionResult(False, 'User with this email already exists.') 
     if password1 != password2:
@@ -72,7 +76,8 @@ def check_password(password, password_hash):
     return bcrypt.checkpw(bytes, password_hash)
 
 def validate_login(email, password):
-    #validate email
+    if not validate_email(email):
+        return ActionResult(False, 'Enter valid email')
     user = User.query.filter_by(email=email).first()
     if not (user and check_password(password, user.password_hash)):
         return ActionResult(False, 'Invalid email or password.')
@@ -84,3 +89,11 @@ def generate_password_hash(password):
     bytes = (password + pepper).encode('utf-8')
     salt = bcrypt.gensalt()
     return bcrypt.hashpw(bytes, salt)
+
+def validate_email(email):
+    pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    return re.match(pattern, email) is not None
+
+def validate_username(username):
+    pattern = r'^[a-zA-Z0-9_]{1,16}$'
+    return re.match(pattern, username) is not None
