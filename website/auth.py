@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User, LoginAttempt
+from .models.user import UserMixin
+from .models.login_attempt import LoginAttempt
 from . import db 
 import bcrypt
 from flask_login import login_user, login_required, logout_user, current_user

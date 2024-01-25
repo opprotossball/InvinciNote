@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 import re
 from . import db 
 from .action_result import ActionResult
-from .models import User, LoginAttempt
+from .models.user import User
+from .models.login_attempt import LoginAttempt
 import bcrypt
 from flask import current_app
 import os
@@ -29,10 +30,15 @@ def validate_sign_up(email, username, password1, password2):
     if not validate_email(email):
         return ActionResult(False, 'Enter valid email.')
     if not validate_username(username):
-        return ActionResult(False, 'Username can contain only alphanumeric characters and underscores.')
+        return ActionResult(False, 'Username can contain up to 32 alphanumeric characters and underscores.')
     user = User.query.filter_by(email=email).first()
     if user:
         return ActionResult(False, 'User with this email already exists.') 
+    return validate_passwords(password1, password2)
+
+def validate_passwords(password1, password2):
+    if not password1 or not password2:
+        return ActionResult(False, 'Passwords cannot be empty.')
     if password1 != password2:
         return ActionResult(False, 'Passwords don\'t match.')
     check = password_check(password1)
@@ -52,7 +58,7 @@ def validate_sign_up(email, username, password1, password2):
         return ActionResult(False, 'Password must contain at least one special character.')
     else:
         return ActionResult(False, 'Password is too weak.')
-    
+
 def check_login_block(user_id):
     time_mins = 10
     failed_attempts = 5
@@ -94,5 +100,5 @@ def validate_email(email):
     return re.match(pattern, email) is not None
 
 def validate_username(username):
-    pattern = r'^[a-zA-Z0-9_]{1,16}$'
+    pattern = r'^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]{1,32}$'
     return re.match(pattern, username) is not None

@@ -24,13 +24,23 @@
   </div>
 
   <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="publicCheckbox" name="public">
+    <input type="checkbox" class="form-check-input" id="publicCheckbox" name="public" onchange="checkboxExclusivity('publicCheckbox', 'encryptedCheckbox')">
     <label class="form-check-label" for="publicCheckbox">Public</label>
   </div>
-
+  
   <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="encryptedCheckbox" name="encrypted">
+    <input type="checkbox" class="form-check-input" id="encryptedCheckbox" name="encrypted" onchange="checkboxExclusivity('encryptedCheckbox', 'publicCheckbox'); togglePasswordFields()">
     <label class="form-check-label" for="encryptedCheckbox">Encrypted</label>
+  </div>
+
+  <div class="form-group">
+    <label for="password1">Password:</label>
+    <input name="password1" type="password" id="password1" class="form-control"></input>
+  </div>
+
+  <div class="form-group">
+    <label for="password2">Confirm Password:</label>
+    <input name="password2" type="password" id="password2" class="form-control"></input>
   </div>
 
   <br />
@@ -39,4 +49,36 @@
     <button type="submit" class="btn btn-primary">Add Note</button>
   </div>
 </form>
+<script>
+  function togglePasswordFields() {
+    var encryptedCheckbox = document.getElementById("encryptedCheckbox");
+    var password1 = document.getElementById("password1");
+    var password2 = document.getElementById("password2");
+    var label1 = document.querySelector('label[for="password1"]');
+    var label2 = document.querySelector('label[for="password2"]');
+
+    if (encryptedCheckbox.checked) {
+      password1.style.display = "block";
+      password2.style.display = "block";
+      label1.style.display = "block";
+      label2.style.display = "block";
+    } else {
+      password1.style.display = "none";
+      password2.style.display = "none";
+      label1.style.display = "none";
+      label2.style.display = "none";
+    }
+  }
+
+  function checkboxExclusivity(checkbox1, checkbox2) {
+    var cb1 = document.getElementById(checkbox1);
+    var cb2 = document.getElementById(checkbox2);
+
+    if (cb1.checked) {
+      cb2.checked = false;
+    } else if (cb2.checked) {
+      cb1.checked = false;
+    }
+  }
+</script>
 {% endblock %}

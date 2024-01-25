@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block title %}Encrypted Note{% endblock %} 
+{% block content %}
+<h1 align="center">{{ note.title }}</h1>
+    <form method="POST">
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" class="form-control">
+      </div>
+    
+      <br />
+    
+      <div align="center">
+        <button type="submit" class="btn btn-primary">Open</button>
+      </div>
+    </form>
+    {% endblock %}
+    
