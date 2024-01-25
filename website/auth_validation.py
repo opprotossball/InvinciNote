@@ -6,7 +6,6 @@ from .models import User, LoginAttempt
 import bcrypt
 from flask import current_app
 import os
-import math
 
 def password_check(password):
     short_error = len(password) < 8

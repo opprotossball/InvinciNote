@@ -32,12 +32,26 @@ def home():
 def show_note(note_id):
     note = Note.query.get(note_id)
     if note:
-        if note.user_id != current_user.id:
+        if (not note.public and (note.user_id != current_user.id)):
             return "Access to note forbidden!", 403
         sanitized_content = clean(note.data, tags=current_app.config['ALLOWED_TAGS'], attributes={'a': ['href']})
         rendered = markdown.markdown(sanitized_content)
         return render_template("note.html", note=note, rendered=rendered, user=current_user)
     return "Note not found", 404
+
+@views.route('/public')
+@login_required
+def public_notes():
+    notes = (
+        db.session.query(Note)
+        .filter(
+            Note.public == True
+        )
+        .order_by(Note.date.desc())
+        .limit(30) 
+        .all()
+    )
+    return render_template('public.html', notes=notes, user=current_user)
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():  

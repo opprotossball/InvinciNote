@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% block title %}Public Notes{% endblock %} 
+{% block content%}
+    <h1 align="center">Public Notes</h1>
+    <ul class="list-group list-group-flush" id="notes">
+      {% for note in notes %}
+      <li class="list-group-item">
+        <a href="{{ url_for('views.show_note', note_id=note.id) }}">{{ note.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+{% endblock %}
