@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 import os
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -14,7 +15,8 @@ def create_app():
     app.config['PEPPER_ENV'] = 'invincinotePepper' 
     app.config['SECRET_KEY'] = os.environ[app.config['APP_SECRET_ENV']]
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
-    app.config['ALLOWED_TAGS'] = ['p', 'br', 'em', 'strong', 'a', 'h1', 'h2', 'h3']
+    app.config['ALLOWED_TAGS'] = ['p', 'br', 'em', 'strong', 'a', 'h1', 'h2', 'h3', 'a[href]']
+    csrf = CSRFProtect(app)
     db.init_app(app)
 
     from .views import views

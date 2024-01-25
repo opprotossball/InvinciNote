@@ -5,14 +5,24 @@
   {% for note in user.notes %}
   <li class="list-group-item">
     <a href="{{ url_for('views.show_note', note_id=note.id) }}">{{ note.title }}</a>
+    {% if note.public %}
+      <img src="/static/eye-icon.svg" alt="Eye Icon" width="16" height="16">
+    {% endif %}
     <button type="button" class="close" onClick="deleteNote({{ note.id }})">
       <span aria-hidden="true">&times;</span>
     </button>
   </li>
   {% endfor %}
+  {% for note in user.encrypted_notes %}
+  <li class="list-group-item">
+    <a href="{{ url_for('views.encrypted_note', note_id=note.id) }}">{{ note.title }}</a>
+    <img src="/static/key-icon.svg" alt="Key Icon" width="16" height="16">
+  </li>
+  {% endfor %}
 </ul>
 <h1 align="center">Add Note</h1>
 <form method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
   <div class="form-group">
     <label for="title">Title:</label>
     <input type="text" name="title" id="title" class="form-control">
@@ -50,6 +60,9 @@
   </div>
 </form>
 <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    togglePasswordFields();
+  });
   function togglePasswordFields() {
     var encryptedCheckbox = document.getElementById("encryptedCheckbox");
     var password1 = document.getElementById("password1");

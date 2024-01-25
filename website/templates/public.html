@@ -5,6 +5,10 @@
       {% for note in notes %}
       <li class="list-group-item">
         <a href="{{ url_for('views.show_note', note_id=note.id) }}">{{ note.title }}</a>
+        {% if note.public %}
+          <img src="/static/eye-icon.svg" alt="Eye Icon" width="16" height="16">
+        {% endif %}
+        <span class="username">{{ note.user.username }}</span>
       </li>
       {% endfor %}
     </ul>

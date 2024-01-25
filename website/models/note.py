@@ -8,3 +8,4 @@ class Note(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     public = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User')

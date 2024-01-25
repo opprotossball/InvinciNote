@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
     totp_enabled = db.Column(db.Boolean, nullable=False, default=False)
     totp_secret = db.Column(db.String, unique=True)
     notes = db.relationship('Note')
+    encrypted_notes = db.relationship('EncryptedNote')
 
     def __init__(self, email, username, password_hash):
         self.email = email
