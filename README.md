@@ -23,11 +23,15 @@ docker-compose up
 
 Otwarcie <https://127.0.0.1>
 
+## Architektura
+- aplikacja Flask
+- baza danych SQLite 
+- serwer uWSGI
+- serwer proxy Nginx
+  
 ## Zaimplementowane funkcje
 - publiczne i prywatne notatki obsługujące markdown
 - szyfrowanie notatki
 - przechowywanie hashy haseł z solą i pieprzem
+- weryfikacja siły hasła
 - dwuetapowa weryfikacja totp
-- serwer uwsgi
-- serwer proxy nginx
-  
