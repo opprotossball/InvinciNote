@@ -1,23 +1,33 @@
-# Flask Web App Tutorial
+# InvinciNote
+### Bezpieczna aplikacja do przechowywania notatek
 
-## Setup & Installation
-
-Make sure you have the latest version of Python installed.
+## Testowe uruchomienie
 
 ```bash
 git clone <repo-url>
 ```
 
 ```bash
-pip install -r requirements.txt
+openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt
 ```
 
-## Running The App
+common name: localhost
 
 ```bash
-python main.py
+docker-compose build
 ```
 
-## Viewing The App
+```bash
+docker-compose up
+```
 
-Go to `http://127.0.0.1:5000`
+Otwarcie <https://127.0.0.1>
+
+## Zaimplementowane funkcje
+- publiczne i prywatne notatki obsługujące markdown
+- szyfrowanie notatki
+- przechowywanie hashy haseł z solą i pieprzem
+- dwuetapowa weryfikacja totp
+- serwer uwsgi
+- serwer proxy nginx
+  
