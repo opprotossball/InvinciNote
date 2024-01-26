@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
         self.email = email
         self.username = username
         self.password_hash = password_hash
-        self.secret_token = pyotp.random_base32()
+        self.totp_secret = pyotp.random_base32()
 
     def get_authentication_setup_uri(self):
         return pyotp.totp.TOTP(self.totp_secret).provisioning_uri(

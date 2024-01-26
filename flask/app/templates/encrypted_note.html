@@ -2,6 +2,7 @@
 {% block content %}
 <h1 align="center">{{ note.title }}</h1>
     <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <div class="form-group">
         <label for="password">Password:</label>
         <input type="password" name="password" id="password" class="form-control">

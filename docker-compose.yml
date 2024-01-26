@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+
+  flask_service:
+    build: ./flask
+    container_name: flask
+    restart: always
+    environment:
+      - APP_NAME=InvinciNote
+      - invincinotePepper=insert_pepper_here
+      - invictinoteAppSecret=insert_app_secret_here
+    expose:
+      - 8080
+
+  nginx_service:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"

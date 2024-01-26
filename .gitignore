@@ -1,3 +1,5 @@
-.vscode
-website/__pycache__
-website/database.db
+**/env/
+**/__pycache__/
+flask/instance/
+*crt
+*key

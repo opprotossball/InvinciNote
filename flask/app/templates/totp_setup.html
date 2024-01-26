@@ -7,7 +7,7 @@
   <div class="col-md-4">
     <main class="form-signin w-100 m-auto">
       <form role="form">
-        {{ form.csrf_token }}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <ul>
             <li>Download <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&gl=US" target="_blank">Google Authenticator</a> on your mobile.</li>
             <li>Set up a new authenticator.</li>
